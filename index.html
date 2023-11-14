@@ -1,129 +1,111 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 
 <head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Đề thi giữa kì</title>
+    <title>badminton</title>
     <style>
-        .container {
-            width: 500px;
-            text-align: center;
-            margin: 0 auto;
+        .scoreboard {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            margin-bottom: 20px;
+
         }
 
-        button {
-            background: yellow;
-            border: none;
+        .scoreboard .score {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
             cursor: pointer;
-            transform: scale(1.2);
-            margin-top: 10px;
-            color: red;
-            padding: 5px;
-            border-radius: 10px;
+            width: 50%;
+            height: 150px;
+            border: 1px solid red;
+            justify-content: center;
+            font-size: 100px;
+            cursor: pointer;
+            user-select: none;
         }
 
-        img {
-            width: 70%;
+        .scoreboard .score p {
+            margin: 5px;
         }
 
-        h4 {
-            color: red;
-            font-size: 20px;
-            text-align: left;
-            margin-left: 80px;
+        .scoreboard .active {
+            background-color: cyan;
         }
 
-        @media only screen and (max-width:46.1875em) {
-            .container {
-                width: 100%;
-                text-align: left;
-            }
-
-            button {
-                margin-left: 40px;
-            }
-
-            img {
-                width: 100%;
-            }
-
-            h4 {
-                color: red;
-                margin-left: 0px;
-                font-size: 17px;
-            }
-
-
-
+        input {
+            border: 1px solid red;
+            height: 50px;
+            text-align: center;
+            margin-bottom: 20px;
+            font-size: 25px;
+            width: 100px;
         }
     </style>
 </head>
 
 <body>
-    <div class="container">
-        <img src="thao.jpg" alt="">
-        <h2>Vovinam - Việt Võ Đạo</h2>
-        <button type="button" onclick="chonbai()">Chọn bài thi</button>
-        <h4 id="baithi"></h4>
+    <input type="number" id="setInput" placeholder="set">
+    <div class="scoreboard">
+        <div class="score" onclick="updateScore('left')" id="leftScoreDiv">
+
+            <p id="leftScore">0</p>
+        </div>
+        <div class="score" onclick="updateScore('right')" id="rightScoreDiv">
+
+            <p id="rightScore">0</p>
+        </div>
+
     </div>
+    <button id="resetButton" onclick="resetScore()" style="display: none;">Reset</button>
+
     <script>
-        var baithi = document.querySelector("#baithi");
-        var tan = ['Trung bình tấn', 'Đinh tấn', 'Tam giác tấn']
-        var traiphai = ['trái', 'phải']
-        var chem = ['1', '2', '3', '4']
-        var dam = ['thẳng', 'thấp', 'múc', 'móc', 'bật ngược']
-        var gat = ['1', '2', '3', '4']
-        var cho = ['1', '2']
-        var rd_tan, rd_traiphai, rd_chem, rd_dam, rd_gat, rd_cho
-        var dem = +0;
-        var chonbai = () => {
-            var tan1 = daobai()
-            var tp1 = rd_traiphai
-            var baitan1 = tan[rd_tan] + " " + traiphai[rd_traiphai];
-            var baithi_chem = "Bài chém : " + tan[rd_tan] + " " + traiphai[rd_traiphai] + " - chém số " + chem[rd_chem];
-            var tan2 = daobai()
-            var tp2 = rd_traiphai
-            while (tan1 == tan2) {
-                tan2 = daobai()
+        var leftScore = 0;
+        var rightScore = 0;
+        var set = 21; // Giá trị mặc định
+        var isSetFinished = false;
+
+        function updateScore(side) {
+            if (!isSetFinished) {
+                if (side === 'left') {
+                    leftScore++;
+                    document.getElementById('leftScore').textContent = leftScore;
+                    document.getElementById('leftScoreDiv').classList.add('active');
+                    document.getElementById('rightScoreDiv').classList.remove('active');
+                } else if (side === 'right') {
+                    rightScore++;
+                    document.getElementById('rightScore').textContent = rightScore;
+                    document.getElementById('rightScoreDiv').classList.add('active');
+                    document.getElementById('leftScoreDiv').classList.remove('active');
+                }
+
+                if (leftScore === set || rightScore === set) {
+                    isSetFinished = true;
+                    document.getElementById('resetButton').style.display = 'block';
+                    document.getElementById('leftScore').disabled = true;
+                    document.getElementById('rightScore').disabled = true;
+                }
             }
-            var baitan2 = tan[rd_tan] + " " + traiphai[tp2];
-            var baithi_dam = "</br>" + "Bài đấm: " + tan[rd_tan] + " " + traiphai[tp2] + " - đấm " + dam[rd_dam];
-            var tan3 = daobai()
-            var tp3 = rd_traiphai
-            while (tan2 == tan3) {
-                tan3 = daobai()
-            }
-            var baitan3 = tan[rd_tan] + " " + traiphai[tp3]
-            if (baitan1 == baitan3) {
-                tp3 = (tp1 == 0) ? 1 : 0
-            }
-            var baithi_gat = "</br>" + "Bài gạt: " + tan[rd_tan] + " " + traiphai[tp3] + " - gạt số " + gat[rd_gat];
-            var tan4 = daobai()
-            var tp4 = rd_traiphai
-            while (tan3 == tan4 || tan1 == tan4) {
-                tan4 = daobai()
-            }
-            var baitan4 = tan[rd_tan] + " " + traiphai[tp4]
-            if (baitan1 == baitan4) {
-                tp4 = tp1 == 0 ? 1 : 0
-            }
-            if (baitan2 == baitan4) {
-                tp4 = tp2 == 0 ? 1 : 0
-            }
-            var baithi_tro = "</br>" + "Bài chỏ: " + tan[rd_tan] + " " + traiphai[tp4] + " - chỏ số " + cho[rd_cho];
-            baithi.innerHTML = baithi_chem + "</br>" + baithi_dam + "</br>" + baithi_gat + "<br>" + baithi_tro;
         }
-        var daobai = () => {
-            rd_tan = Math.round(Math.random() * 2)
-            rd_traiphai = Math.round(Math.random() * 1)
-            rd_chem = Math.round(Math.random() * 3)
-            rd_dam = Math.round(Math.random() * 4)
-            rd_gat = Math.round(Math.random() * 3)
-            rd_cho = Math.round(Math.random() * 1)
-            return rd_tan;
+
+        function resetScore() {
+            leftScore = 0;
+            rightScore = 0;
+            document.getElementById('leftScore').textContent = leftScore;
+            document.getElementById('rightScore').textContent = rightScore;
+            document.getElementById('resetButton').style.display = 'none';
+            document.getElementById('leftScore').disabled = false;
+            document.getElementById('rightScore').disabled = false;
+            document.getElementById('leftScoreDiv').classList.remove('active');
+            document.getElementById('rightScoreDiv').classList.remove('active');
+            isSetFinished = false;
         }
+
+        document.getElementById('setInput').addEventListener('input', function () {
+            set = parseInt(document.getElementById('setInput').value);
+        });
     </script>
 </body>
 
